@@ -1,0 +1,17 @@
+# Findings the IaC scan reports that are accepted, with the reason. Anything
+# not listed here fails the pipeline at CRITICAL. Review when the reason
+# stops being true.
+misconfigurations:
+  - id: AWS-0164
+    paths:
+      - "terraform/network.tf"
+    statement: >
+      The public subnets are public on purpose: they hold the NAT gateway and
+      would hold a load balancer. Nothing of ours is launched in them.
+  - id: AWS-0039
+    paths:
+      - "terraform/eks.tf"
+    statement: >
+      EKS secrets encryption (encryption_config with a KMS key) is the right
+      setting in AWS. The emulator accepts and discards it, so Terraform would
+      see drift on every plan. Add the block back against a real account.

@@ -1,0 +1,84 @@
+# The pipeline. Thin on purpose: every step calls a script in scripts/ci/,
+# so the same stage runs the same way here, in the toolbox container, and
+# in a terminal. What lives here is only the shape -- which stages, in what
+# order, on which events.
+#
+#   pull_request -> scan only (prepare, sast, iac-scan, build, image-scan)
+#   push to main -> scan, then push, deploy, dast, publish
+#
+# Runs on the self-hosted runner in runner/, which sits on the emulator's
+# network. GitHub-hosted runners cannot reach the cluster.
+name: pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      plant_vuln:
+        description: "Plant deliberate findings so the gates fail"
+        type: boolean
+        default: false
+
+env:
+  PLANT_VULN: ${{ inputs.plant_vuln && '1' || '0' }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  scan:
+    name: scan and build
+    runs-on: [self-hosted, pipeline-lab]
+    steps:
+      - uses: actions/checkout@v4
+      - name: prepare
+        run: bash scripts/ci/prepare.sh
+      - name: sast (semgrep)
+        run: bash scripts/ci/sast.sh
+      - name: iac scan (trivy config)
+        run: bash scripts/ci/iac-scan.sh
+      - name: build
+        run: bash scripts/ci/build.sh
+      - name: sbom + image scan (trivy)
+        run: bash scripts/ci/image-scan.sh
+      - name: keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.sha }}
+          path: reports/
+          retention-days: 14
+      - name: push
+        if: github.event_name != 'pull_request'
+        run: bash scripts/ci/push.sh
+
+  deploy:
+    name: deploy and verify
+    needs: scan
+    if: github.event_name != 'pull_request'
+    runs-on: [self-hosted, pipeline-lab]
+    steps:
+      - uses: actions/checkout@v4
+      - name: fetch the scan reports, so s3 gets the whole set
+        uses: actions/download-artifact@v4
+        with:
+          name: reports-${{ github.sha }}
+          path: reports/
+      - name: prepare
+        run: bash scripts/ci/prepare.sh
+      - name: deploy (helm)
+        run: bash scripts/ci/deploy.sh
+      - name: dast (zap baseline)
+        run: bash scripts/ci/dast.sh
+      - name: publish reports to s3
+        if: always()
+        run: bash scripts/ci/publish-reports.sh
+      - name: keep the dast report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dast-${{ github.sha }}
+          path: reports/zap-*
+          retention-days: 14

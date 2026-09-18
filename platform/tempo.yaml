@@ -1,0 +1,17 @@
+# Tempo single binary. Receives OTLP from the app's SDK on 4317, queried by
+# Grafana on 3200.
+tempo:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  retention: 24h
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+persistence:
+  enabled: false

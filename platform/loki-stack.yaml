@@ -1,0 +1,19 @@
+# Loki (log store) + Promtail (a DaemonSet that tails every container's
+# stdout on the node and ships it). No persistence: logs live as long as
+# the pod does, which is fine for a lab.
+loki:
+  enabled: true
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+promtail:
+  enabled: true
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+grafana:
+  enabled: false     # kube-prometheus-stack's Grafana is the one

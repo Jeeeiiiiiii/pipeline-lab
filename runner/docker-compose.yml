@@ -1,0 +1,48 @@
+# Two ways to run the same image.
+#
+#   runner   the GitHub Actions self-hosted runner. Registers itself with
+#            your repository using the token in .env, then waits for jobs.
+#            `docker compose up -d runner`
+#
+#   toolbox  the same image with the repository mounted, for running the
+#            pipeline (or any single stage) by hand, exactly as the runner
+#            would. `docker compose run --rm toolbox scripts/pipeline.sh`
+#
+# Both sit on the emulator network and share the host Docker daemon.
+services:
+  runner:
+    build: .
+    image: pipeline-lab/runner
+    env_file: .env
+    environment:
+      RUNNER_NAME: pipeline-lab-runner
+      RUNNER_WORKDIR: /tmp/runner/work
+      LABELS: self-hosted,pipeline-lab
+      EPHEMERAL: "false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - floci_default
+    restart: unless-stopped
+
+  toolbox:
+    build: .
+    image: pipeline-lab/runner
+    profiles: ["tools"]
+    entrypoint: ["/bin/bash", "-c"]
+    working_dir: /workspace
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+      PLANT_VULN: ${PLANT_VULN:-0}
+      DAST_MODE: ${DAST_MODE:-baseline}
+    volumes:
+      - ..:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - floci_default
+
+networks:
+  floci_default:
+    external: true

@@ -1,0 +1,53 @@
+# Everything the platform knows about the app is here. Change the app's
+# port, health path, or secrets, and this is the one file to touch.
+
+image:
+  repository: ""        # set by the pipeline: the ECR repository URL
+  tag: ""               # set by the pipeline: the commit SHA
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# The one port the container listens on. Service, ingress, probes and the
+# ServiceMonitor all read it from here.
+containerPort: 8080
+
+probes:
+  path: /healthz
+
+metrics:
+  path: /metrics
+
+ingress:
+  className: nginx
+  # Empty: the app answers on any host, which is what a lab with one app
+  # and no DNS wants. Set it and the ingress routes by Host header.
+  host: ""
+  path: /
+
+# Where traces go. Tempo's OTLP gRPC receiver in the monitoring namespace.
+otlpEndpoint: http://tempo.monitoring.svc:4317
+
+# Secrets Manager -> Kubernetes Secret, via External Secrets. Each entry is
+# an env var name and the Secrets Manager secret it comes from. Add a secret
+# to Terraform, add a line here, and the app has it as an env var.
+externalSecrets:
+  secretStore: aws-secrets-manager   # the SecretStore in this namespace
+  refreshInterval: 1m
+  env:
+    API_KEY: pipeline-lab/app/api-key
+    DAST_TOKEN: pipeline-lab/dast/token
+
+# Fires when more than 5% of requests fail for one minute. /boom is how
+# the demo trips it.
+alerting:
+  errorRateThreshold: 0.05
+  for: 1m
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 96Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi

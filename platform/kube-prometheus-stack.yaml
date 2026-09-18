@@ -1,0 +1,79 @@
+# Prometheus Operator + Prometheus + Alertmanager + Grafana + exporters.
+# Trimmed for a single small node: no persistence, one replica of everything,
+# and the control-plane scrapes that k3s does not expose are off.
+
+grafana:
+  # Admin credentials come from Secrets Manager via an ExternalSecret in the
+  # monitoring namespace (platform/monitoring-secrets.yaml), not from values.
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL   # the app ships its own dashboard in its namespace
+  additionalDataSources:
+    - name: Loki
+      uid: loki
+      type: loki
+      url: http://loki-stack.monitoring.svc:3100
+      jsonData:
+        # A trace_id in a log line becomes a link into Tempo.
+        derivedFields:
+          - name: trace_id
+            matcherRegex: '"trace_id":\s*"(\w+)"'
+            url: "$${__value.raw}"
+            datasourceUid: tempo
+    - name: Tempo
+      uid: tempo
+      type: tempo
+      url: http://tempo.monitoring.svc:3200
+      jsonData:
+        # A trace becomes a link to the logs around it.
+        tracesToLogsV2:
+          datasourceUid: loki
+          spanStartTimeShift: "-5m"
+          spanEndTimeShift: "5m"
+          filterByTraceID: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    resources:
+      requests:
+        cpu: 100m
+        memory: 400Mi
+    # Pick up every ServiceMonitor and PrometheusRule labelled for this
+    # release, in any namespace. The app chart labels its own.
+    serviceMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+
+# The emulated node is a container; its root filesystem is not a shared
+# mount, so node-exporter cannot bind-mount it. Off locally; on in AWS.
+prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: false
+
+# k3s runs these in-process and does not expose their metrics endpoints.
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+

@@ -1,0 +1,26 @@
+# Picked up by the Prometheus Operator by label, evaluated by Prometheus,
+# routed by Alertmanager. The app's own alert ships with the app's chart.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "app.name" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: {{ include "app.name" . }}
+      rules:
+        - alert: AppHighErrorRate
+          expr: |
+            sum(rate(flask_http_request_total{status=~"5..", namespace="{{ .Release.Namespace }}"}[1m]))
+              /
+            sum(rate(flask_http_request_total{namespace="{{ .Release.Namespace }}"}[1m]))
+              > {{ .Values.alerting.errorRateThreshold }}
+          for: {{ .Values.alerting.for }}
+          labels:
+            severity: warning
+            app: {{ include "app.name" . }}
+          annotations:
+            summary: "{{ include "app.name" . }}: more than {{ .Values.alerting.errorRateThreshold }} of requests are failing"
+            description: "5xx rate over the last minute is {{ "{{" }} $value | humanizePercentage {{ "}}" }}."

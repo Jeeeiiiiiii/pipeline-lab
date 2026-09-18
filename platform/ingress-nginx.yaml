@@ -1,0 +1,16 @@
+# The cluster's front door. NodePort 30080: locally the emulated node is a
+# container and this is how the runner and the DAST scanner reach the app;
+# in AWS the AWS Load Balancer Controller would put an NLB in front.
+controller:
+  replicaCount: 1
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+  admissionWebhooks:
+    enabled: false
+  resources:
+    requests:
+      cpu: 50m
+      memory: 96Mi

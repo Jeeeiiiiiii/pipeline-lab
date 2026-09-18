@@ -1,0 +1,12 @@
+# Grafana's sidecar watches for ConfigMaps with this label in any namespace
+# and loads them as dashboards. The app's dashboard ships with the app.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.name" . }}-dashboard
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  app.json: |-
+{{ .Files.Get "dashboards/app.json" | indent 4 }}

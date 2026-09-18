@@ -1,0 +1,6 @@
+apiVersion: v2
+name: app
+description: The pipeline-lab app, with everything the platform needs to observe and secure it
+type: application
+version: 0.1.0
+appVersion: "dev"
