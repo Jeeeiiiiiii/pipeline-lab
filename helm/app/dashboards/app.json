@@ -28,7 +28,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (status) (rate(flask_http_request_total{namespace=\"app\"}[1m]))",
+          "expr": "sum by (status) (rate(flask_http_request_total{namespace=\"__NAMESPACE__\"}[1m]))",
           "legendFormat": "{{status}}"
         }
       ],
@@ -55,7 +55,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(flask_http_request_total{namespace=\"app\",status=~\"5..\"}[1m])) / sum(rate(flask_http_request_total{namespace=\"app\"}[1m]))",
+          "expr": "sum(rate(flask_http_request_total{namespace=\"__NAMESPACE__\",status=~\"5..\"}[1m])) / sum(rate(flask_http_request_total{namespace=\"__NAMESPACE__\"}[1m]))",
           "legendFormat": "5xx"
         }
       ],
@@ -82,17 +82,17 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"app\"}[1m])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"__NAMESPACE__\"}[1m])))",
           "legendFormat": "p50"
         },
         {
           "refId": "B",
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"app\"}[1m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"__NAMESPACE__\"}[1m])))",
           "legendFormat": "p95"
         },
         {
           "refId": "C",
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"app\"}[1m])))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(flask_http_request_duration_seconds_bucket{namespace=\"__NAMESPACE__\"}[1m])))",
           "legendFormat": "p99"
         }
       ],
@@ -119,7 +119,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "app_info{namespace=\"app\"}",
+          "expr": "app_info{namespace=\"__NAMESPACE__\"}",
           "legendFormat": "{{version}}"
         }
       ]
@@ -141,7 +141,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "{namespace=\"app\"} | json"
+          "expr": "{namespace=\"__NAMESPACE__\"} | json"
         }
       ],
       "options": {

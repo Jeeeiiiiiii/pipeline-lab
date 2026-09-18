@@ -76,7 +76,7 @@ runner/        the runner/toolbox image and its compose file
 | `build` | Docker | — | build error |
 | `image-scan` | Trivy image: CycloneDX SBOM + vulnerabilities | `sbom.cdx.json`, `trivy-image.json` | any CRITICAL with a fixed version |
 | `push` | Docker → ECR | — | tag already exists (immutable) |
-| `deploy` | Helm `upgrade --install --wait`, then curl through the ingress | — | rollout fails, or the new version does not answer |
+| `deploy` | Helm `upgrade --install --wait`, then curl through the ingress | — | no `pushed.txt` from `push` (never deploys an unpublished tag); rollout fails; the new version does not answer |
 | `dast` | OWASP ZAP baseline, authenticated with the DAST token | `zap-baseline.html`, `.json` | a FAIL-level rule (none by default; WARN is reported) |
 | `publish-reports` | AWS CLI → `s3://pipeline-lab-reports/<tag>/` | everything above | — |
 
@@ -168,6 +168,7 @@ Worth recording, because it is what a pipeline is for:
 - **IaC, first run:** CRITICAL — the EKS control plane security group allowed egress to `0.0.0.0/0`. Fixed: egress to the VPC CIDR only. Also HIGH: unencrypted S3 bucket → now SSE-KMS; EKS secrets encryption → *accepted* in `.trivyignore.yaml` because the emulator discards the setting (drift on every plan); public subnets assign public IPs → *accepted*, that is what public subnets are for.
 - **Image, first run:** 3 CRITICAL in `perl-base` from the `python:3.12-slim` base, all with a Debian fix. Fixed: `apt-get upgrade` in the Dockerfile. 44 HIGH remain, none with a fix; reported, not blocking.
 - **DAST, first run:** 5 warnings, all missing response headers. Fixed in the app (`X-Content-Type-Options`, CSP, `Permissions-Policy`, `Cross-Origin-Resource-Policy`). 2 remain: "non-storable content" (a property of `no-store`, not a problem) and a CSP fallback note.
+- **Deploy of an unpushed tag:** after a `PLANT_VULN=1` scan run, `deploy.sh` tried to roll out the image the gate had (correctly) refused to push, and hung on `ImagePullBackOff`. Now `push.sh` writes `reports/pushed.txt` and `deploy.sh` refuses to run without it.
 - **Hardened pod, first deploy:** `readOnlyRootFilesystem: true` crashed gunicorn — no `/tmp`. Fixed with an `emptyDir` at `/tmp`; the root stays read-only.
 
 ## What is real and what is not

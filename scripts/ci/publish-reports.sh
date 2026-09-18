@@ -4,6 +4,7 @@
 source "$(dirname "$0")/lib.sh"
 
 BUCKET="${REPORTS_BUCKET:-${CLUSTER}-reports}"
+need_report tag.txt prepare
 TAG=$(cat "$REPORTS/tag.txt")
 
 hr "publish: s3://${BUCKET}/${TAG}/"

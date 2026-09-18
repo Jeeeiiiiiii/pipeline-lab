@@ -5,6 +5,7 @@
 #          fails the pipeline: a fix exists and we did not take it.
 source "$(dirname "$0")/lib.sh"
 
+need_report image.txt build
 IMAGE=$(cat "$REPORTS/image.txt")
 
 hr "sbom: $IMAGE"

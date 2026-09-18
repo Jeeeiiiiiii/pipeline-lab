@@ -1,5 +1,14 @@
 # Everything the platform knows about the app is here. Change the app's
 # port, health path, or secrets, and this is the one file to touch.
+#
+# What the chart assumes the platform provides (platform/, scripts/platform-up.sh):
+#   - an IngressClass named "nginx"
+#   - a SecretStore named "aws-secrets-manager" in the release namespace
+#   - the Prometheus Operator CRDs, with Prometheus selecting every
+#     ServiceMonitor and PrometheusRule (no release label required)
+#   - Grafana's sidecar loading ConfigMaps labelled grafana_dashboard=1
+#   - Tempo's OTLP gRPC receiver at otlpEndpoint below
+# Nothing else. The chart does not know the platform's release names.
 
 image:
   repository: ""        # set by the pipeline: the ECR repository URL

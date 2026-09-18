@@ -43,6 +43,11 @@ jobs:
         run: bash scripts/ci/build.sh
       - name: sbom + image scan (trivy)
         run: bash scripts/ci/image-scan.sh
+      - name: push
+        if: github.event_name != 'pull_request'
+        run: bash scripts/ci/push.sh
+      # After push, so reports/pushed.txt travels to the deploy job: deploy
+      # refuses any tag that was not published by this run.
       - name: keep the reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,9 +55,6 @@ jobs:
           name: reports-${{ github.sha }}
           path: reports/
           retention-days: 14
-      - name: push
-        if: github.event_name != 'pull_request'
-        run: bash scripts/ci/push.sh
 
   deploy:
     name: deploy and verify

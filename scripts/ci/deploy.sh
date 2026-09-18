@@ -2,7 +2,10 @@
 # Stage 6: roll the image out with Helm and prove the new version answers.
 source "$(dirname "$0")/lib.sh"
 
-REPO=$(cat "$REPORTS/repository.txt"); TAG=$(cat "$REPORTS/tag.txt")
+# Only what push.sh published. A scan-only run (or a run the gates stopped)
+# leaves tag.txt pointing at an image that is not in the registry.
+need_report pushed.txt push
+IMAGE=$(cat "$REPORTS/pushed.txt"); REPO="${IMAGE%:*}"; TAG="${IMAGE##*:}"
 write_kubeconfig "$ROOT/.cluster/kubeconfig.ci.yaml"
 
 hr "deploy: helm upgrade --install app (${TAG})"

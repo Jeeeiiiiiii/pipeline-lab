@@ -9,4 +9,4 @@ metadata:
     grafana_dashboard: "1"
 data:
   app.json: |-
-{{ .Files.Get "dashboards/app.json" | indent 4 }}
+{{ .Files.Get "dashboards/app.json" | replace "__NAMESPACE__" .Release.Namespace | indent 4 }}

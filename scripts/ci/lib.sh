@@ -42,6 +42,10 @@ else
   APP_URL="${APP_URL:-http://localhost:8080}"   # scripts/forward.sh
 fi
 
+# --- host compatibility -----------------------------------------------------
+# These exist so the host-side scripts (forward, demo, platform-up) run on a
+# Windows laptop with Git Bash and no AWS CLI. The runner image needs none of it.
+
 # Windows installs Python as `python`; Linux as `python3`.
 py() { if command -v python3 >/dev/null 2>&1; then python3 "$@"; else python "$@"; fi; }
 
@@ -53,17 +57,20 @@ if ! command -v aws >/dev/null 2>&1; then
   }
 fi
 
+# Stages hand each other facts through reports/. Say which stage is missing
+# instead of failing on an empty string three commands later.
+need_report() {
+  local f="$1" stage="$2"
+  [ -s "$REPORTS/$f" ] || { echo "reports/$f missing: run scripts/ci/${stage}.sh first" >&2; exit 1; }
+}
+
 # The image. Tag is the commit, so a tag can never mean two things. Outside
 # git (or with a dirty tree) fall back to a timestamp so local runs do not
 # collide with the immutable tag of a real commit.
 image_ref() {
-  local repo
-  repo=$(cat "$REPORTS/repository.txt" 2>/dev/null || true)
-  if [ -z "$repo" ]; then
-    echo "reports/repository.txt missing: run scripts/ci/prepare.sh first" >&2
-    return 1
-  fi
-  echo "${repo}:$(cat "$REPORTS/tag.txt")"
+  need_report repository.txt prepare
+  need_report tag.txt prepare
+  echo "$(cat "$REPORTS/repository.txt"):$(cat "$REPORTS/tag.txt")"
 }
 
 # The emulator names its registry <account>.dkr.ecr.<region>.localhost:5100.
