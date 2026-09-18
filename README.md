@@ -161,6 +161,17 @@ When the app's *contract* changes, exactly one file changes:
 The platform (`platform/`), the workflow, and the stage scripts do not know
 what the app is.
 
+## Next steps
+
+1. **The first real run.** Create the GitHub repo, push, start the runner (see "The real pipeline" above). Watch the Actions tab and then `http://localhost:8080/` answer with the commit SHA. Until this is done, gap 8 stands.
+2. **Sign what you ship.** `cosign sign` the image in `push.sh` and a Kyverno `verifyImages` policy on the cluster, so an unsigned image cannot start — the gate on the *consuming* side.
+3. **A second environment.** A `staging` namespace with a values overlay, deployed from pull requests to a PR-specific URL, and `main` promoting to `prod`. The chart already does not care which namespace it lands in.
+4. **Pull-based delivery.** Replace `deploy.sh` with Argo CD watching a `deploy/` directory the pipeline commits the new tag into. The pipeline then never holds cluster credentials.
+5. **Route the alert somewhere.** An Alertmanager receiver (Slack webhook, or just a `webhook` to a tiny logger pod) and a silence, so "the alert fired" becomes "someone was told".
+6. **Load and scale.** An HPA on the app, `k6` from the toolbox against `/work`, and the dashboard showing replicas climb — the observability stack earning its keep.
+7. **A "Nexus" after all.** Gitea's package registry (or Nexus if RAM allows) as a Helm chart and SBOM store, published from `publish-reports.sh` alongside S3.
+8. **Keep the tools current.** Renovate (or Dependabot) on `runner/Dockerfile` ARGs, `platform-up.sh` chart versions, and `app/requirements.txt`; the image gate will tell you when an update matters.
+
 ## What the scanners found, and what happened
 
 Worth recording, because it is what a pipeline is for:
