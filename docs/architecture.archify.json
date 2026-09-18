@@ -1,0 +1,400 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "pipeline-lab: push to observed release",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "pipeline",
+        "label": "The pipeline",
+        "focus": [
+          "github",
+          "runner",
+          "ecr",
+          "s3",
+          "app",
+          "ingress"
+        ],
+        "note": "GitHub dispatches to a runner on this machine; it scans, builds, gates, pushes, deploys, then scans the running app."
+      },
+      {
+        "id": "secrets",
+        "label": "Secrets",
+        "focus": [
+          "secrets",
+          "eso",
+          "app",
+          "grafana"
+        ],
+        "note": "Terraform writes to Secrets Manager; External Secrets pulls into Kubernetes Secrets; nothing secret in git or the image."
+      },
+      {
+        "id": "observability",
+        "label": "Observability",
+        "focus": [
+          "app",
+          "prometheus",
+          "loki",
+          "tempo",
+          "grafana"
+        ],
+        "note": "The app emits metrics, JSON logs with a trace id, and OTLP spans; Grafana links a log line to its trace and back."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "github",
+      "type": "external",
+      "label": "GitHub Actions",
+      "sublabel": "push to main / PR",
+      "pos": [
+        40,
+        44
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "Self-hosted runner",
+      "sublabel": "scan · gate · deploy · DAST",
+      "pos": [
+        270,
+        44
+      ],
+      "size": [
+        200,
+        62
+      ],
+      "tag": "this machine"
+    },
+    {
+      "id": "s3",
+      "type": "cloud",
+      "label": "S3 reports",
+      "sublabel": "SBOM · SAST · IaC · DAST",
+      "pos": [
+        40,
+        290
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "ecr",
+      "type": "cloud",
+      "label": "ECR",
+      "sublabel": "app:<commit sha>",
+      "pos": [
+        520,
+        290
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "secrets",
+      "type": "security",
+      "label": "Secrets Manager",
+      "sublabel": "api-key · grafana · dast",
+      "pos": [
+        270,
+        590
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "ingress",
+      "type": "frontend",
+      "label": "ingress-nginx",
+      "sublabel": "NodePort 30080",
+      "pos": [
+        520,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "app",
+      "sublabel": "Helm release",
+      "pos": [
+        760,
+        290
+      ],
+      "size": [
+        150,
+        62
+      ],
+      "tag": "ns: app"
+    },
+    {
+      "id": "eso",
+      "type": "security",
+      "label": "External Secrets",
+      "sublabel": "SecretStore → Secret",
+      "pos": [
+        760,
+        590
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "prometheus",
+      "type": "backend",
+      "label": "Prometheus",
+      "sublabel": "+ Alertmanager",
+      "pos": [
+        950,
+        190
+      ],
+      "size": [
+        150,
+        62
+      ],
+      "tag": "ns: monitoring"
+    },
+    {
+      "id": "loki",
+      "type": "database",
+      "label": "Loki",
+      "sublabel": "via Promtail",
+      "pos": [
+        950,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "tempo",
+      "type": "database",
+      "label": "Tempo",
+      "sublabel": "OTLP :4317",
+      "pos": [
+        950,
+        590
+      ],
+      "size": [
+        150,
+        62
+      ]
+    },
+    {
+      "id": "grafana",
+      "type": "frontend",
+      "label": "Grafana",
+      "sublabel": "one UI, three pillars",
+      "pos": [
+        1160,
+        440
+      ],
+      "size": [
+        150,
+        62
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "AWS (Floci, local)",
+      "wraps": [
+        "s3",
+        "ecr",
+        "secrets",
+        "ingress",
+        "app",
+        "eso",
+        "prometheus",
+        "loki",
+        "tempo",
+        "grafana"
+      ],
+      "pad": 22
+    },
+    {
+      "kind": "security-group",
+      "label": "EKS cluster (private subnets)",
+      "wraps": [
+        "ingress",
+        "app",
+        "eso",
+        "prometheus",
+        "loki",
+        "tempo",
+        "grafana"
+      ],
+      "pad": 14
+    }
+  ],
+  "connections": [
+    {
+      "from": "github",
+      "to": "runner",
+      "label": "dispatch job",
+      "variant": "emphasis"
+    },
+    {
+      "from": "runner",
+      "to": "s3",
+      "label": "reports",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "runner",
+      "to": "ecr",
+      "label": "push, after the gates",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        660,
+        262
+      ]
+    },
+    {
+      "from": "runner",
+      "to": "app",
+      "label": "helm upgrade --install",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        750,
+        184
+      ]
+    },
+    {
+      "from": "runner",
+      "to": "ingress",
+      "label": "smoke + ZAP DAST",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "from": "ecr",
+      "to": "app",
+      "label": "pull image",
+      "variant": "dashed"
+    },
+    {
+      "from": "secrets",
+      "to": "eso",
+      "label": "GetSecretValue",
+      "variant": "security"
+    },
+    {
+      "from": "eso",
+      "to": "app",
+      "label": "env from Secret",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "ingress",
+      "to": "app",
+      "label": "HTTP",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "from": "prometheus",
+      "to": "app",
+      "label": "scrape /metrics",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "top",
+      "labelAt": [
+        880,
+        186
+      ]
+    },
+    {
+      "from": "app",
+      "to": "loki",
+      "label": "JSON logs",
+      "fromSide": "right",
+      "toSide": "top",
+      "labelSegment": 1
+    },
+    {
+      "from": "app",
+      "to": "tempo",
+      "label": "traces",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelSegment": 1
+    },
+    {
+      "from": "prometheus",
+      "to": "grafana",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "from": "loki",
+      "to": "grafana"
+    },
+    {
+      "from": "tempo",
+      "to": "grafana",
+      "fromSide": "right",
+      "toSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Two gates, both CRITICAL",
+      "items": [
+        "IaC: any CRITICAL not accepted in .trivyignore.yaml",
+        "Image: any CRITICAL with a fix available",
+        "PLANT_VULN=1 proves both fire"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Secrets never touch git",
+      "items": [
+        "Terraform → Secrets Manager",
+        "External Secrets → Kubernetes Secret",
+        "New secret: one resource + one values line"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "The app declares its health",
+      "items": [
+        "ServiceMonitor, PrometheusRule, dashboard ship in its chart",
+        "One trace id: log line ↔ Loki ↔ Tempo",
+        "/boom drives the alert to firing"
+      ]
+    }
+  ]
+}

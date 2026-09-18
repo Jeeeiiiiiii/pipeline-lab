@@ -34,6 +34,10 @@ a `git push` really does end with a new version answering on the cluster.
                                  └───────────────────────────────────────────────────┘
 ```
 
+An interactive version of this diagram, with guided views for the pipeline,
+the secrets path, and observability: open `docs/architecture.html` in a
+browser (source: `docs/architecture.archify.json`).
+
 ## The decisions
 
 | Decision | Why |
