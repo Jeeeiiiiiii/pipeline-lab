@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T00:00:00Z",
+  "title": "Design System: pipeline-lab Operating Theatre",
+  "extensions": {
+    "colorMeta": {
+      "wall": { "role": "neutral", "displayName": "Theatre Wall", "canonical": "#D7E2DC", "tonalRamp": ["oklch(15% 0.015 160)", "oklch(27% 0.015 160)", "oklch(39% 0.015 160)", "oklch(51% 0.015 160)", "oklch(63% 0.015 160)", "oklch(75% 0.015 160)", "oklch(85% 0.015 160)", "oklch(95% 0.015 160)"] },
+      "wall-deep": { "role": "neutral", "displayName": "Wall Deep", "canonical": "#C3D2CA", "tonalRamp": ["oklch(15% 0.02 160)", "oklch(27% 0.02 160)", "oklch(39% 0.02 160)", "oklch(51% 0.02 160)", "oklch(63% 0.02 160)", "oklch(75% 0.02 160)", "oklch(85% 0.02 160)", "oklch(95% 0.02 160)"] },
+      "wall-ink": { "role": "neutral", "displayName": "Wall Ink", "canonical": "#1B2A25", "tonalRamp": ["oklch(15% 0.02 170)", "oklch(27% 0.02 170)", "oklch(39% 0.02 170)", "oklch(51% 0.02 170)", "oklch(63% 0.02 170)", "oklch(75% 0.02 170)", "oklch(85% 0.02 170)", "oklch(95% 0.02 170)"] },
+      "wall-dim": { "role": "neutral", "displayName": "Wall Dim", "canonical": "#47594F", "tonalRamp": ["oklch(15% 0.025 160)", "oklch(27% 0.025 160)", "oklch(39% 0.025 160)", "oklch(51% 0.025 160)", "oklch(63% 0.025 160)", "oklch(75% 0.025 160)", "oklch(85% 0.025 160)", "oklch(95% 0.025 160)"] },
+      "sheet": { "role": "neutral", "displayName": "Checklist Paper", "canonical": "#FBFCF9", "tonalRamp": ["oklch(15% 0.004 130)", "oklch(27% 0.004 130)", "oklch(39% 0.004 130)", "oklch(51% 0.004 130)", "oklch(63% 0.004 130)", "oklch(75% 0.004 130)", "oklch(85% 0.004 130)", "oklch(95% 0.004 130)"] },
+      "sheet-rule": { "role": "neutral", "displayName": "Sheet Rule", "canonical": "#CBD6CF", "tonalRamp": ["oklch(15% 0.015 160)", "oklch(27% 0.015 160)", "oklch(39% 0.015 160)", "oklch(51% 0.015 160)", "oklch(63% 0.015 160)", "oklch(75% 0.015 160)", "oklch(85% 0.015 160)", "oklch(95% 0.015 160)"] },
+      "sheet-hover": { "role": "neutral", "displayName": "Sheet Hover", "canonical": "#EEF2EE", "tonalRamp": ["oklch(15% 0.008 150)", "oklch(27% 0.008 150)", "oklch(39% 0.008 150)", "oklch(51% 0.008 150)", "oklch(63% 0.008 150)", "oklch(75% 0.008 150)", "oklch(85% 0.008 150)", "oklch(95% 0.008 150)"] },
+      "tail-wash": { "role": "neutral", "displayName": "Tail Wash", "canonical": "#F1F4F1", "tonalRamp": ["oklch(15% 0.006 150)", "oklch(27% 0.006 150)", "oklch(39% 0.006 150)", "oklch(51% 0.006 150)", "oklch(63% 0.006 150)", "oklch(75% 0.006 150)", "oklch(85% 0.006 150)", "oklch(95% 0.006 150)"] },
+      "ink": { "role": "neutral", "displayName": "Checklist Ink", "canonical": "#17221F", "tonalRamp": ["oklch(15% 0.017 175)", "oklch(27% 0.017 175)", "oklch(39% 0.017 175)", "oklch(51% 0.017 175)", "oklch(63% 0.017 175)", "oklch(75% 0.017 175)", "oklch(85% 0.017 175)", "oklch(95% 0.017 175)"] },
+      "ink-dim": { "role": "neutral", "displayName": "Ink Dim", "canonical": "#4D5C55", "tonalRamp": ["oklch(15% 0.018 165)", "oklch(27% 0.018 165)", "oklch(39% 0.018 165)", "oklch(51% 0.018 165)", "oklch(63% 0.018 165)", "oklch(75% 0.018 165)", "oklch(85% 0.018 165)", "oklch(95% 0.018 165)"] },
+      "idle-box": { "role": "neutral", "displayName": "Idle Box", "canonical": "#7F8E87", "tonalRamp": ["oklch(15% 0.017 165)", "oklch(27% 0.017 165)", "oklch(39% 0.017 165)", "oklch(51% 0.017 165)", "oklch(63% 0.017 165)", "oklch(75% 0.017 165)", "oklch(85% 0.017 165)", "oklch(95% 0.017 165)"] },
+      "go": { "role": "secondary", "displayName": "Theatre Green Tick", "canonical": "#1E6E50", "tonalRamp": ["oklch(15% 0.09 162)", "oklch(27% 0.09 162)", "oklch(39% 0.09 162)", "oklch(51% 0.09 162)", "oklch(63% 0.09 162)", "oklch(75% 0.09 162)", "oklch(85% 0.09 162)", "oklch(95% 0.09 162)"] },
+      "go-wash": { "role": "secondary", "displayName": "Tick Wash", "canonical": "#E2F0E8", "tonalRamp": ["oklch(15% 0.02 160)", "oklch(27% 0.02 160)", "oklch(39% 0.02 160)", "oklch(51% 0.02 160)", "oklch(63% 0.02 160)", "oklch(75% 0.02 160)", "oklch(85% 0.02 160)", "oklch(95% 0.02 160)"] },
+      "scrub": { "role": "primary", "displayName": "Scrub Blue", "canonical": "#2A5F9E", "tonalRamp": ["oklch(15% 0.12 255)", "oklch(27% 0.12 255)", "oklch(39% 0.12 255)", "oklch(51% 0.12 255)", "oklch(63% 0.12 255)", "oklch(75% 0.12 255)", "oklch(85% 0.12 255)", "oklch(95% 0.12 255)"] },
+      "scrub-deep": { "role": "primary", "displayName": "Scrub Deep", "canonical": "#224F86", "tonalRamp": ["oklch(15% 0.11 255)", "oklch(27% 0.11 255)", "oklch(39% 0.11 255)", "oklch(51% 0.11 255)", "oklch(63% 0.11 255)", "oklch(75% 0.11 255)", "oklch(85% 0.11 255)", "oklch(95% 0.11 255)"] },
+      "bezel": { "role": "neutral", "displayName": "Bezel", "canonical": "#101614", "tonalRamp": ["oklch(15% 0.008 165)", "oklch(27% 0.008 165)", "oklch(39% 0.008 165)", "oklch(51% 0.008 165)", "oklch(63% 0.008 165)", "oklch(75% 0.008 165)", "oklch(85% 0.008 165)", "oklch(95% 0.008 165)"] },
+      "screen": { "role": "neutral", "displayName": "Screen", "canonical": "#050807", "tonalRamp": ["oklch(15% 0.006 165)", "oklch(27% 0.006 165)", "oklch(39% 0.006 165)", "oklch(51% 0.006 165)", "oklch(63% 0.006 165)", "oklch(75% 0.006 165)", "oklch(85% 0.006 165)", "oklch(95% 0.006 165)"] },
+      "grid": { "role": "neutral", "displayName": "Grid", "canonical": "#13261C", "tonalRamp": ["oklch(15% 0.035 155)", "oklch(27% 0.035 155)", "oklch(39% 0.035 155)", "oklch(51% 0.035 155)", "oklch(63% 0.035 155)", "oklch(75% 0.035 155)", "oklch(85% 0.035 155)", "oklch(95% 0.035 155)"] },
+      "phosphor": { "role": "tertiary", "displayName": "Monitor Phosphor", "canonical": "#4FE08C", "tonalRamp": ["oklch(15% 0.18 152)", "oklch(27% 0.18 152)", "oklch(39% 0.18 152)", "oklch(51% 0.18 152)", "oklch(63% 0.18 152)", "oklch(75% 0.18 152)", "oklch(85% 0.18 152)", "oklch(95% 0.18 152)"] },
+      "phosphor-dim": { "role": "tertiary", "displayName": "Phosphor Dim", "canonical": "#45A872", "tonalRamp": ["oklch(15% 0.13 154)", "oklch(27% 0.13 154)", "oklch(39% 0.13 154)", "oklch(51% 0.13 154)", "oklch(63% 0.13 154)", "oklch(75% 0.13 154)", "oklch(85% 0.13 154)", "oklch(95% 0.13 154)"] },
+      "screen-text": { "role": "neutral", "displayName": "Screen Text", "canonical": "#CFE9DA", "tonalRamp": ["oklch(15% 0.035 160)", "oklch(27% 0.035 160)", "oklch(39% 0.035 160)", "oklch(51% 0.035 160)", "oklch(63% 0.035 160)", "oklch(75% 0.035 160)", "oklch(85% 0.035 160)", "oklch(95% 0.035 160)"] },
+      "screen-note": { "role": "neutral", "displayName": "Screen Note", "canonical": "#B8CDC1", "tonalRamp": ["oklch(15% 0.025 160)", "oklch(27% 0.025 160)", "oklch(39% 0.025 160)", "oklch(51% 0.025 160)", "oklch(63% 0.025 160)", "oklch(75% 0.025 160)", "oklch(85% 0.025 160)", "oklch(95% 0.025 160)"] },
+      "no-signal": { "role": "neutral", "displayName": "No Signal", "canonical": "#7C8C84", "tonalRamp": ["oklch(15% 0.018 160)", "oklch(27% 0.018 160)", "oklch(39% 0.018 160)", "oklch(51% 0.018 160)", "oklch(63% 0.018 160)", "oklch(75% 0.018 160)", "oklch(85% 0.018 160)", "oklch(95% 0.018 160)"] },
+      "control-dark": { "role": "neutral", "displayName": "Control Dark", "canonical": "#1B2420", "tonalRamp": ["oklch(15% 0.012 160)", "oklch(27% 0.012 160)", "oklch(39% 0.012 160)", "oklch(51% 0.012 160)", "oklch(63% 0.012 160)", "oklch(75% 0.012 160)", "oklch(85% 0.012 160)", "oklch(95% 0.012 160)"] },
+      "control-dark-hover": { "role": "neutral", "displayName": "Control Dark Hover", "canonical": "#24302A", "tonalRamp": ["oklch(15% 0.015 160)", "oklch(27% 0.015 160)", "oklch(39% 0.015 160)", "oklch(51% 0.015 160)", "oklch(63% 0.015 160)", "oklch(75% 0.015 160)", "oklch(85% 0.015 160)", "oklch(95% 0.015 160)"] },
+      "control-dark-rule": { "role": "neutral", "displayName": "Control Dark Rule", "canonical": "#2C3B34", "tonalRamp": ["oklch(15% 0.018 160)", "oklch(27% 0.018 160)", "oklch(39% 0.018 160)", "oklch(51% 0.018 160)", "oklch(63% 0.018 160)", "oklch(75% 0.018 160)", "oklch(85% 0.018 160)", "oklch(95% 0.018 160)"] },
+      "warn": { "role": "tertiary", "displayName": "Warning Yellow", "canonical": "#F4C542", "tonalRamp": ["oklch(15% 0.15 88)", "oklch(27% 0.15 88)", "oklch(39% 0.15 88)", "oklch(51% 0.15 88)", "oklch(63% 0.15 88)", "oklch(75% 0.15 88)", "oklch(85% 0.15 88)", "oklch(95% 0.15 88)"] },
+      "on-warn": { "role": "neutral", "displayName": "On-warn", "canonical": "#231A00", "tonalRamp": ["oklch(15% 0.045 85)", "oklch(27% 0.045 85)", "oklch(39% 0.045 85)", "oklch(51% 0.045 85)", "oklch(63% 0.045 85)", "oklch(75% 0.045 85)", "oklch(85% 0.045 85)", "oklch(95% 0.045 85)"] },
+      "alarm": { "role": "tertiary", "displayName": "Alarm Red", "canonical": "#F0504F", "tonalRamp": ["oklch(15% 0.2 25)", "oklch(27% 0.2 25)", "oklch(39% 0.2 25)", "oklch(51% 0.2 25)", "oklch(63% 0.2 25)", "oklch(75% 0.2 25)", "oklch(85% 0.2 25)", "oklch(95% 0.2 25)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The theatre name on the board; 1.9rem on phones." },
+      "headline": { "displayName": "Headline", "purpose": "The checklist sheet title." },
+      "title": { "displayName": "Phase Title", "purpose": "Uppercase phase headings (Sign in, Procedure, Sign out) in Ink Dim." },
+      "body": { "displayName": "Body", "purpose": "All prose: lede, notes, stage purpose lines, status words, verdicts. Stage names at 800." },
+      "label": { "displayName": "Board Label", "purpose": "Uppercase labels of the theatre board slots." },
+      "readout": { "displayName": "Readout", "purpose": "Monitor numerals in Phosphor; the alert word at 1.35rem." },
+      "screen-label": { "displayName": "Screen Label", "purpose": "Uppercase mono labels on the monitor screen in Phosphor Dim." },
+      "data": { "displayName": "Data", "purpose": "Chips, GO/NO-GO tags, exit codes, durations, tags, severities, output tail." },
+      "trace-label": { "displayName": "Trace Label", "purpose": "Trace axis labels; 11px at every width because the viewBox equals the element's pixel width." }
+    },
+    "shadows": [
+      { "name": "sheet-on-wall", "value": "0 1px 0 rgba(0,0,0,.08), 0 12px 26px -16px rgba(16,30,24,.45)", "purpose": "The checklist paper lying on the wall. Sheet only." },
+      { "name": "monitor-off-wall", "value": "0 18px 30px -18px rgba(5,12,9,.8)", "purpose": "The bedside monitor standing off the wall. Monitor only." },
+      { "name": "screen-edge", "value": "inset 0 0 0 1px #0E1C15", "purpose": "The screen glass inside the bezel. Not a glow." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(.16, 1, .3, 1)", "purpose": "Button press scale." },
+      { "name": "hover", "value": "background-color .12s", "purpose": "Button hover background change." },
+      { "name": "press", "value": "transform .14s; scale(.97) on :active", "purpose": "Button press feedback. The only authored motion in the system." }
+    ],
+    "breakpoints": [
+      { "name": "board-one-row", "value": "1641px", "purpose": "Six board slots in one row beside the name." },
+      { "name": "board-3x2", "value": "1640px", "purpose": "max-width: board slots in a 3 x 2 grid under the name." },
+      { "name": "theatre-stack", "value": "1100px", "purpose": "max-width: checklist and monitor stack; monitor no longer sticky." },
+      { "name": "phone", "value": "720px", "purpose": "max-width: two-column board with alert slot first and full width; line status under text; two-column readouts." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one scrub-blue action per surface (Start full procedure).",
+      "html": "<button class=\"ds-btn ds-btn-primary\" type=\"button\">Start full procedure</button>",
+      "css": ".ds-btn { font: 700 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; border: 1px solid var(--ink, #17221F); background: var(--sheet, #FBFCF9); color: var(--ink, #17221F); border-radius: 4px; padding: 10px 16px; cursor: pointer; transition: background-color .12s, transform .14s cubic-bezier(.16, 1, .3, 1); } .ds-btn:active { transform: scale(.97); } .ds-btn:focus-visible { outline: 2px solid var(--scrub, #2A5F9E); outline-offset: 3px; } .ds-btn-primary { background: var(--scrub, #2A5F9E); border-color: var(--scrub, #2A5F9E); color: #fff; } .ds-btn-primary:hover { background: var(--scrub-deep, #224F86); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Paper button with an ink border for every other action on the sheet.",
+      "html": "<button class=\"ds-btn2\" type=\"button\">Sign-in only, vulnerability planted</button>",
+      "css": ".ds-btn2 { font: 700 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; border: 1px solid var(--ink, #17221F); background: var(--sheet, #FBFCF9); color: var(--ink, #17221F); border-radius: 4px; padding: 10px 16px; cursor: pointer; transition: background-color .12s, transform .14s cubic-bezier(.16, 1, .3, 1); } .ds-btn2:hover { background: #EEF2EE; } .ds-btn2:active { transform: scale(.97); } .ds-btn2:focus-visible { outline: 2px solid var(--scrub, #2A5F9E); outline-offset: 3px; } .ds-btn2[disabled] { opacity: .5; cursor: not-allowed; transform: none; }"
+    },
+    {
+      "name": "Monitor Treatment Buttons",
+      "kind": "button",
+      "refersTo": "button-monitor",
+      "description": "Dark buttons under the screen; the harmful one is marked by weight and a bright border, never by hue.",
+      "html": "<div class=\"ds-treat\"><button class=\"ds-tbtn ds-tbtn-harm\" type=\"button\">Induce failure: 30 × /boom</button><button class=\"ds-tbtn\" type=\"button\">Normal traffic: 30 × /</button></div>",
+      "css": ".ds-treat { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px; background: var(--bezel, #101614); border-radius: 14px; } .ds-tbtn { font: 700 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; background: #1B2420; color: var(--screen-text, #CFE9DA); border: 1px solid #2C3B34; border-radius: 4px; padding: 10px 16px; cursor: pointer; transition: background-color .12s, transform .14s cubic-bezier(.16, 1, .3, 1); } .ds-tbtn:hover { background: #24302A; } .ds-tbtn:active { transform: scale(.97); } .ds-tbtn:focus-visible { outline: 2px solid var(--scrub, #2A5F9E); outline-offset: 3px; } .ds-tbtn-harm { border-color: var(--screen-text, #CFE9DA); color: #fff; font-weight: 800; }"
+    },
+    {
+      "name": "Checklist Lines",
+      "kind": "custom",
+      "refersTo": "checklist-sheet",
+      "description": "One stage per line: tick box signed by the exit code, name with stage-id chip, purpose, status. GO is a green tick; NO-GO is ink-reversed.",
+      "html": "<div class=\"ds-sheet\"><h3 class=\"ds-phase\">Sign in<span>before anything ships</span></h3><ol class=\"ds-lines\"><li class=\"ds-line ds-go\"><span class=\"ds-box\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M3 8.5 L6.5 12 L13 4.5\" fill=\"none\" stroke=\"#1E6E50\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span><span class=\"ds-what\"><b>Static analysis</b> <span class=\"ds-chip\">sast</span><p>Semgrep reads the source for bugs and hard-coded secrets.</p></span><span class=\"ds-status\"><span class=\"ds-s-go\">GO</span><small>24 s</small></span></li><li class=\"ds-line ds-nogo\"><span class=\"ds-box\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 4 L12 12 M12 4 L4 12\" fill=\"none\" stroke=\"#FBFCF9\" stroke-width=\"2.4\" stroke-linecap=\"round\"/></svg></span><span class=\"ds-what\"><b>Image scan</b> <span class=\"ds-chip\">image-scan</span><p>Trivy lists every package in the image and its known vulnerabilities.</p></span><span class=\"ds-status\"><span class=\"ds-s-nogo\">NO-GO</span><small>exit 1 · 41 s</small></span></li><li class=\"ds-line ds-idle\"><span class=\"ds-box\"></span><span class=\"ds-what\"><b>Push</b> <span class=\"ds-chip\">push</span><p>Sends the image to ECR.</p></span><span class=\"ds-status\"><span>not started</span><small>after a NO-GO</small></span></li></ol></div>",
+      "css": ".ds-sheet { background: #FBFCF9; color: #17221F; border-radius: 4px; padding: 18px 22px 22px; box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 12px 26px -16px rgba(16,30,24,.45); font: 400 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-phase { margin: 0 0 4px; font: 800 .82rem/1.2 \"Atkinson Hyperlegible Next\", system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #4D5C55; display: flex; justify-content: space-between; } .ds-phase span { font-weight: 400; letter-spacing: 0; text-transform: none; font-size: .9rem; } .ds-lines { list-style: none; margin: 0; padding: 0; border-top: 2px solid #17221F; } .ds-line { display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 4px 12px; padding: 10px 0 11px; border-bottom: 1px solid #CBD6CF; align-items: start; } .ds-box { width: 22px; height: 22px; border: 2px solid #17221F; border-radius: 3px; display: grid; place-items: center; background: #FBFCF9; margin-top: 1px; } .ds-box svg { width: 16px; height: 16px; } .ds-go .ds-box { border-color: #1E6E50; background: #E2F0E8; } .ds-nogo .ds-box { background: #17221F; } .ds-idle { color: #4D5C55; } .ds-idle .ds-box { border-color: #7F8E87; } .ds-what b { font-weight: 800; } .ds-what p { margin: 1px 0 0; color: #4D5C55; font-size: .95rem; } .ds-chip { font: 700 .8rem/1 \"Atkinson Hyperlegible Mono\", ui-monospace, Consolas, monospace; padding: 4px 6px 3px; border: 1px solid #CBD6CF; border-radius: 2px; } .ds-status { text-align: right; white-space: nowrap; font-size: .92rem; color: #4D5C55; padding-top: 2px; } .ds-status small { display: block; font-size: .85rem; font-family: \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; } .ds-s-go { font-family: \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; color: #1E6E50; font-weight: 700; } .ds-s-nogo { font-family: \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; background: #17221F; color: #FBFCF9; font-weight: 700; padding: 1px 7px; border-radius: 2px; letter-spacing: .06em; }"
+    },
+    {
+      "name": "Finding Chips",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Mono severity counts under a scan line; CRITICAL/ERROR reversed in ink, HIGH ink-bordered, never alarm colours.",
+      "html": "<div class=\"ds-chips\"><span class=\"ds-c ds-c-crit\">CRITICAL 2</span><span class=\"ds-c ds-c-hi\">HIGH 7</span><span class=\"ds-c\">MEDIUM 12</span></div>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px; background: #FBFCF9; } .ds-c { font: 700 .8rem/1 \"Atkinson Hyperlegible Mono\", ui-monospace, Consolas, monospace; padding: 4px 6px 3px; border: 1px solid #CBD6CF; border-radius: 2px; color: #17221F; } .ds-c-hi { border-color: #17221F; } .ds-c-crit { border-color: #17221F; background: #17221F; color: #FBFCF9; }"
+    },
+    {
+      "name": "Theatre Board",
+      "kind": "nav",
+      "refersTo": "board-slot",
+      "description": "Ruled grid of labelled slots saying what is on the table; the alert slot fills yellow when pending, red when firing.",
+      "html": "<div class=\"ds-slots\"><div class=\"ds-slot\"><small>On the table</small><span><code>a1b2c3d</code> · rev 7 · 2/2 ready</span></div><div class=\"ds-slot\"><small>Pushed</small><span>yes</span></div><div class=\"ds-slot ds-alert ds-firing\"><small>AppHighErrorRate</small><span>ALARM</span></div></div>",
+      "css": ".ds-slots { display: grid; grid-template-columns: repeat(3, auto); border: 1.5px solid #1B2A25; border-radius: 3px; background: #FBFCF9; font: 400 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; } .ds-slot { padding: 5px 12px 6px; border-left: 1px solid #CBD6CF; } .ds-slot:first-child { border-left: 0; } .ds-slot small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #4D5C55; } .ds-slot span { display: block; font-weight: 700; color: #17221F; white-space: nowrap; } .ds-slot code { font-family: \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; font-size: .92em; } .ds-alert span { font-family: \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; letter-spacing: .04em; } .ds-pending { background: #F4C542; } .ds-pending small, .ds-pending span { color: #231A00; } .ds-firing { background: #F0504F; } .ds-firing small, .ds-firing span { color: #fff; }"
+    },
+    {
+      "name": "Bedside Monitor Readouts",
+      "kind": "card",
+      "refersTo": "monitor",
+      "description": "Flat black monitor: screen header, phosphor readouts, alert readout and the alarm bar (no percentage on the bar).",
+      "html": "<div class=\"ds-mon\"><div class=\"ds-scr\"><div class=\"ds-head\"><span>Patient: <b>app</b></span><span>a1b2c3d</span></div><div class=\"ds-ros\"><div class=\"ds-ro\"><small>Errors, 1 m</small><div class=\"ds-n\">38.2<span>%</span></div></div><div class=\"ds-ro\"><small>Requests</small><div class=\"ds-n\">0.85<span>/s</span></div></div><div class=\"ds-ro ds-ro-alert\"><small>AppHighErrorRate</small><div class=\"ds-n\">ALARM</div><div class=\"ds-why\">firing; above 5% since 72s ago</div></div></div><div class=\"ds-bar\">ALARM · AppHighErrorRate firing: above 5% for more than a minute</div></div></div>",
+      "css": ".ds-mon { background: #101614; border-radius: 14px; padding: 14px; box-shadow: 0 18px 30px -18px rgba(5,12,9,.8); color: #CFE9DA; font-variant-numeric: tabular-nums; } .ds-scr { background: #050807; border-radius: 6px; padding: 12px 14px 14px; box-shadow: inset 0 0 0 1px #0E1C15; } .ds-head { display: flex; justify-content: space-between; font: 600 .8rem/1.2 \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: #45A872; } .ds-head b { color: #4FE08C; } .ds-ros { display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 10px; margin-top: 10px; } .ds-ro { border-top: 1px solid #16291F; padding-top: 6px; min-width: 0; } .ds-ro small { display: block; font: 600 .74rem/1.2 \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: #45A872; } .ds-n { font: 700 2.1rem/1.1 \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; color: #4FE08C; } .ds-n span { font-size: .9rem; font-weight: 400; color: #45A872; margin-left: 3px; } .ds-ro-alert .ds-n { font-size: 1.35rem; padding-top: 6px; letter-spacing: .04em; } .ds-ro-alert .ds-n, .ds-ro-alert small { color: #F0504F; } .ds-why { font: 400 .8rem/1.35 \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; opacity: .8; margin-top: 2px; } .ds-bar { margin-top: 10px; padding: 7px 10px; border-radius: 4px; font: 700 .9rem/1.3 \"Atkinson Hyperlegible Mono\", ui-monospace, monospace; letter-spacing: .04em; background: #F0504F; color: #fff; }"
+    },
+    {
+      "name": "Verdict",
+      "kind": "card",
+      "refersTo": "checklist-sheet",
+      "description": "Closing box under the checklist: ink border when stopped at a gate, green on tick wash when the procedure completes.",
+      "html": "<div class=\"ds-verdict\"><b>Stopped at Image scan.</b> The gate caught the planted vulnerability, as intended. Nothing after it ran, and <b>nothing was pushed</b>.</div><div class=\"ds-verdict ds-done\"><b>Procedure complete.</b> The new image is live.</div>",
+      "css": ".ds-verdict { margin-top: 12px; padding: 12px 14px; border: 2px solid #17221F; border-radius: 4px; background: #FBFCF9; color: #17221F; font: 400 16px/1.5 \"Atkinson Hyperlegible Next\", \"Segoe UI\", system-ui, sans-serif; } .ds-verdict b { font-weight: 800; } .ds-done { border-color: #1E6E50; background: #E2F0E8; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operating Theatre",
+    "overview": "A deployment is an operation. The page is a theatre wall in clinical green-grey with two objects on it: a printed WHO-style surgical checklist and a black bedside monitor. The checklist runs in three phases (sign in, procedure, sign out); every line is one stage script, and its tick box is signed by that script's own exit code, with the scanner's evidence written underneath. The monitor shows the deployed app as the patient: one phosphor trace of its error rate, numeric readouts, and the alert. Above both hangs the theatre board, a ruled grid of labelled slots saying what is on the table.\n\nThe register is calm, legible and procedural. Density is moderate: a checklist line carries a name, a stage id, one sentence of purpose, a status and a duration, and the evidence chips only when a scan wrote them. Colour is spent sparingly and by role: green-grey for the room, near-black ink for the paperwork, scrub-blue for the operator's hand, phosphor green for the instrument, and yellow and red held back for the alert alone. A refusal at a gate is the system working, so it is printed in reversed ink, never in alarm colours.\n\nThis world is its own and is distinct from the sibling labs: not finops-agent's engine-room logbook, not rag-lab's wire desk, not order-lab's split-flap departures board, and not mesh-lab's grey-blue bench instrument. It shares only the house habits of those pages (one static file, self-hosted type, state read live from the running lab).",
+    "keyCharacteristics": [
+      "Clinical green-grey wall, an off-white printed sheet, and a flat black monitor: three materials, each with its own palette.",
+      "GO is a green tick; NO-GO is ink-reversed (black box, white cross, inverted tag). Neither uses the alarm colours.",
+      "Yellow (WARNING, pending) and red (ALARM, firing) appear only in the alert: the monitor readout, the alarm bar, and the board's alert slot.",
+      "Scrub-blue marks the one primary action and the operator's focus, nothing else on the wall.",
+      "One family, two cuts: Atkinson Hyperlegible Next for everything a person reads as prose, Atkinson Hyperlegible Mono for data.",
+      "Flat modern monitor: no glow, no scanlines, no CRT curvature."
+    ],
+    "rules": [
+      { "name": "The Reserved Alarm Rule", "body": "Yellow (#F4C542) and red (#F0504F) belong only to the alert: WARNING means pending, ALARM means firing, and they appear in the monitor readout, the alarm bar, the board's alert slot and the threshold line. No button, stage, finding or decoration may borrow them.", "section": "colors" },
+      { "name": "The Gate Works Rule", "body": "A NO-GO is the gate doing its job. It is ink-reversed (black box with a white cross, inverted \"NO-GO\" tag in mono), never red. A CRITICAL or ERROR finding chip is reversed the same way.", "section": "colors" },
+      { "name": "The One Scrub Rule", "body": "Scrub-blue is the operator's hand: one primary action per surface, plus focus, selection and the live \"in progress\" word. Harm is marked by weight, not hue.", "section": "colors" },
+      { "name": "The Data-Only Mono Rule", "body": "On the wall and the sheet, mono is only for data: GO / NO-GO, exit codes, durations, tags, stage ids, severities, image names, command lines. Status prose (\"waiting\", \"not started\", \"after a NO-GO\") and every explanation are the sans. The monitor screen is the instrument and prints in mono throughout; the explanatory note beneath it is sans.", "section": "typography" },
+      { "name": "The Same Size Everywhere Rule", "body": "The trace's SVG viewBox is set to the element's own pixel width, so 11px axis labels render at 11px on a phone as on a desktop. Never scale chart text with the viewport.", "section": "typography" },
+      { "name": "The Flat Monitor Rule", "body": "The screen is a flat modern patient monitor. No glow, bloom, text-shadow, scanlines or curvature on the trace, the numerals or the alarm.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do sign every checklist line from the stage's own exit code and show the scanner's evidence under it.",
+      "Do print a NO-GO ink-reversed: Checklist Ink (#17221F) box with a paper cross and an inverted mono \"NO-GO\" tag.",
+      "Do keep Warning Yellow (#F4C542) and Alarm Red (#F0504F) for the alert's pending and firing states only.",
+      "Do use Scrub Blue (#2A5F9E) for one primary action per surface, and for focus and selection.",
+      "Do mark a harmful control by weight (800, brighter border), not by colour.",
+      "Do use Atkinson Hyperlegible Mono only for data on the wall and sheet; keep status prose in Atkinson Hyperlegible Next.",
+      "Do plot the alert's own expression on the trace, leave no-traffic windows as gaps, cap the axis at 100%, and size the SVG viewBox to the element's pixel width.",
+      "Do keep exactly one error figure on screen, the Errors readout.",
+      "Do keep the idle tick box border at #7F8E87 or darker so an unrun line is still visible."
+    ],
+    "donts": [
+      "Don't colour a NO-GO, a CRITICAL finding, a stopped verdict or a harmful button red or yellow.",
+      "Don't add glow, bloom, text-shadow or scanlines to the monitor; it is a flat modern screen.",
+      "Don't interpolate the trace across windows with no traffic, or let the y-axis pass 100%.",
+      "Don't repeat the error percentage in the alarm bar or anywhere else on the screen.",
+      "Don't set status prose or explanations in mono on the wall or the sheet.",
+      "Don't add a second Scrub Blue action beside the primary one.",
+      "Don't add motion beyond hover and press feedback without recording it here first."
+    ]
+  }
+}

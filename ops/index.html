@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theatre 1 · pipeline-lab</title>
+<style>
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url(/fonts/AtkinsonHyperlegibleNext-var.woff2) format("woff2"); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible Mono"; src: url(/fonts/AtkinsonHyperlegibleMono-var.woff2) format("woff2"); font-weight: 200 800; font-display: swap; }
+
+:root {
+  --wall: #D7E2DC;          /* theatre green-grey */
+  --wall-deep: #C3D2CA;
+  --wall-ink: #1B2A25;
+  --wall-dim: #47594F;
+  --sheet: #FBFCF9;         /* the printed checklist */
+  --sheet-rule: #CBD6CF;
+  --ink: #17221F;
+  --ink-dim: #4D5C55;
+  --go: #1E6E50;            /* a ticked line */
+  --go-wash: #E2F0E8;
+  --scrub: #2A5F9E;         /* the one primary action */
+  --scrub-deep: #224F86;
+
+  --bezel: #101614;         /* the bedside monitor */
+  --screen: #050807;
+  --phosphor: #4FE08C;
+  --phosphor-dim: #45A872;   /* labels on the screen: 6:1 */
+  --grid: #13261C;
+  --warn: #F4C542;          /* pending: reserved for the alert */
+  --alarm: #F0504F;         /* firing: reserved for the alert */
+  --screen-text: #CFE9DA;
+
+  --sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, monospace;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--wall); color-scheme: light; }
+body { margin: 0; background: var(--wall); color: var(--wall-ink); font: 400 16px/1.5 var(--sans); font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--scrub); color: #fff; }
+:focus-visible { outline: 2px solid var(--scrub); outline-offset: 3px; }
+button { font: inherit; color: inherit; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 22px 28px 44px; }
+
+/* the theatre board ---------------------------------------------------------------- */
+.board { display: grid; grid-template-columns: auto 1fr; gap: 6px 32px; align-items: end; padding-bottom: 14px; border-bottom: 2px solid var(--wall-ink); }
+.board h1 { margin: 0; font: 800 2.3rem/1 var(--sans); letter-spacing: -.01em; }
+.board h1 span { font-weight: 400; color: var(--wall-dim); }
+/* the theatre board: a ruled grid of labelled slots */
+.slots { display: grid; grid-template-columns: repeat(6, auto); border: 1.5px solid var(--wall-ink); border-radius: 3px; background: var(--sheet); justify-self: end; }
+.slot { padding: 5px 12px 6px; border-left: 1px solid var(--sheet-rule); min-width: 0; }
+.slot:first-child { border-left: 0; }
+.slot small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+.slot span { display: block; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.slot code { font-family: var(--mono); font-size: .92em; }
+.slot.alert span { font-family: var(--mono); letter-spacing: .04em; }
+.slot.alert.pending { background: var(--warn); }
+.slot.alert.pending small, .slot.alert.pending span { color: #231A00; }
+.slot.alert.firing { background: var(--alarm); }
+.slot.alert.firing small, .slot.alert.firing span { color: #fff; }
+.lede { margin: 12px 0 0; max-width: 78ch; color: var(--wall-dim); }
+.lede b { color: var(--wall-ink); font-weight: 700; }
+.banner { margin-top: 12px; padding: 10px 14px; background: #F6E3DF; border: 1px solid #B55A4E; color: #6E2219; border-radius: 4px; }
+.banner code { font-family: var(--mono); font-size: .9em; }
+
+.theatre { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+
+/* the checklist ---------------------------------------------------------------------- */
+.sheet { background: var(--sheet); color: var(--ink); border-radius: 4px; box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 12px 26px -16px rgba(16, 30, 24, .45); padding: 18px 22px 22px; }
+.sheet h2 { margin: 0; font: 800 1.2rem/1.2 var(--sans); }
+.sheet .note { margin: 4px 0 14px; color: var(--ink-dim); max-width: 70ch; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--sheet-rule); }
+.btn { border: 1px solid var(--ink); background: var(--sheet); border-radius: 4px; padding: 10px 16px; font-weight: 700; cursor: pointer; transition: background-color .12s, transform .14s var(--ease); }
+.btn:hover { background: #EEF2EE; }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--scrub); border-color: var(--scrub); color: #fff; }
+.btn.primary:hover { background: var(--scrub-deep); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+.runstate { color: var(--ink-dim); }
+.runstate b { color: var(--ink); }
+
+.phase { margin-top: 16px; }
+.phase h3 { margin: 0 0 4px; font: 800 .82rem/1.2 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; gap: 10px; }
+.phase h3 span { font-weight: 400; letter-spacing: 0; text-transform: none; font-size: .9rem; }
+ol.lines { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.line { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 0 11px; border-bottom: 1px solid var(--sheet-rule); align-items: start; }
+.box { width: 22px; height: 22px; border: 2px solid var(--ink); border-radius: 3px; margin-top: 1px; display: grid; place-items: center; background: var(--sheet); }
+.box svg { width: 16px; height: 16px; }
+.line.go .box { border-color: var(--go); background: var(--go-wash); }
+.line.nogo .box { background: var(--ink); }
+.line.running .box { border-style: dashed; }
+.line.idle { color: var(--ink-dim); }
+.line.idle .box { border-color: #7F8E87; }   /* 3.3:1 on the sheet: the resting box must stay visible */
+.what b { font-weight: 800; }
+.what p { margin: 1px 0 0; color: var(--ink-dim); font-size: .95rem; max-width: 62ch; }
+.status { text-align: right; white-space: nowrap; font-size: .92rem; padding-top: 2px; color: var(--ink-dim); }
+.status .go, .status .nogo, .status .run, .status .t { font-family: var(--mono); }
+.status .go { color: var(--go); font-weight: 700; }
+.status .nogo { background: var(--ink); color: var(--sheet); font-weight: 700; padding: 1px 7px; border-radius: 2px; letter-spacing: .06em; }
+.status .run { color: var(--scrub); font-weight: 700; }
+.status small { display: block; color: var(--ink-dim); font-size: .85rem; }
+.ev { grid-column: 2 / -1; margin-top: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.chip { font: 700 .8rem/1 var(--mono); padding: 4px 6px 3px; border: 1px solid var(--sheet-rule); border-radius: 2px; color: var(--ink); }
+.chip.crit { border-color: var(--ink); background: var(--ink); color: var(--sheet); }
+.chip.hi { border-color: var(--ink); }
+.ev .rule { color: var(--ink-dim); font-size: .92rem; }
+.ev ul { list-style: none; margin: 6px 0 0; padding: 0; font-size: .9rem; }
+.ev li { display: grid; grid-template-columns: 6.6em minmax(0, 1fr); gap: 8px; padding: 2px 0; }
+.ev li .s { font-family: var(--mono); font-size: .8rem; color: var(--ink-dim); padding-top: 2px; }
+.ev li .w { overflow-wrap: anywhere; }
+.ev li .w em { font-style: normal; color: var(--ink-dim); }
+.tail { grid-column: 2 / -1; margin-top: 6px; font: 400 .8rem/1.45 var(--mono); color: var(--ink-dim); background: #F1F4F1; border-radius: 3px; padding: 6px 8px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 7.4em; overflow: hidden; }
+.verdict { margin-top: 16px; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 4px; }
+.verdict b { font-weight: 800; }
+.verdict.done { border-color: var(--go); background: var(--go-wash); }
+
+/* the bedside monitor ---------------------------------------------------------------- */
+.monitor { position: sticky; top: 14px; background: var(--bezel); border-radius: 14px; padding: 14px; box-shadow: 0 18px 30px -18px rgba(5, 12, 9, .8); color: var(--screen-text); }
+.screen { background: var(--screen); border-radius: 6px; padding: 12px 14px 14px; box-shadow: inset 0 0 0 1px #0E1C15; }
+.scrhead { display: flex; justify-content: space-between; gap: 10px; font: 600 .8rem/1.2 var(--mono); letter-spacing: .08em; color: var(--phosphor-dim); text-transform: uppercase; }
+.scrhead b { color: var(--phosphor); font-weight: 700; }
+svg.trace { display: block; width: 100%; height: auto; margin-top: 6px; }
+.trace .gridline { stroke: var(--grid); stroke-width: 1; }
+.trace .thr { stroke: var(--warn); stroke-width: 1; stroke-dasharray: 4 4; opacity: .8; }
+.trace text { font: 400 11px var(--mono); fill: var(--phosphor-dim); }
+.trace .wave { fill: none; stroke: var(--phosphor); stroke-width: 2; stroke-linejoin: round; }
+.readouts { display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 10px; margin-top: 10px; }
+.ro { border-top: 1px solid #16291F; padding-top: 6px; min-width: 0; }
+.ro small { display: block; font: 600 .74rem/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--phosphor-dim); }
+.ro .n { font: 700 2.1rem/1.1 var(--mono); color: var(--phosphor); }
+.ro .n span { font-size: .9rem; font-weight: 400; color: var(--phosphor-dim); margin-left: 3px; }
+.ro.alert .n { font-size: 1.35rem; padding-top: 6px; letter-spacing: .04em; }
+.ro.alert.pending .n, .ro.alert.pending small { color: var(--warn); }
+.ro.alert.firing .n, .ro.alert.firing small { color: var(--alarm); }
+.ro.alert.nosignal .n { color: #7C8C84; }
+.ro .why { font: 400 .8rem/1.35 var(--mono); color: var(--screen-text); opacity: .8; margin-top: 2px; }
+.alarmbar { margin-top: 10px; padding: 7px 10px; border-radius: 4px; font: 700 .9rem/1.3 var(--mono); letter-spacing: .04em; display: none; }
+.alarmbar.pending { display: block; background: var(--warn); color: #231A00; }
+.alarmbar.firing { display: block; background: var(--alarm); color: #fff; }
+.treat { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.treat .btn { background: #1B2420; color: var(--screen-text); border-color: #2C3B34; }
+.treat .btn:hover { background: #24302A; }
+.treat .btn.harm { border-color: var(--screen-text); color: #fff; font-weight: 800; }   /* marked by weight; red belongs to the alert */
+.mnote { margin: 10px 2px 0; font-size: .92rem; line-height: 1.45; color: #B8CDC1; }
+.mnote b { color: #fff; }
+.mnote code { font-family: var(--mono); font-size: .9em; color: #fff; }
+.treatres { margin: 8px 2px 0; font: 400 .85rem/1.4 var(--mono); color: var(--screen-text); min-height: 1.4em; }
+
+.colophon { margin-top: 30px; padding-top: 10px; border-top: 1px solid var(--wall-deep); color: var(--wall-dim); max-width: 78ch; font-size: .95rem; }
+.colophon code { font-family: var(--mono); font-size: .9em; color: var(--wall-ink); }
+
+@media (max-width: 1640px) {
+  .board { grid-template-columns: 1fr; }
+  .slots { justify-self: stretch; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .slot:nth-child(4) { border-left: 0; }
+  .slot:nth-child(n+4) { border-top: 1px solid var(--sheet-rule); }
+}
+@media (max-width: 1100px) {
+  .theatre { grid-template-columns: minmax(0, 1fr); }
+  .monitor { position: static; }
+}
+@media (max-width: 720px) {
+  .wrap { padding: 18px 16px 34px; }
+  .board { grid-template-columns: 1fr; }
+  .board h1 { font-size: 1.9rem; }
+  .slots { justify-self: stretch; grid-template-columns: 1fr 1fr; }
+  .slot { border-left: 0; border-top: 1px solid var(--sheet-rule); }
+  .slot:nth-child(-n+2) { border-top: 0; }
+  .slot:nth-child(2n) { border-left: 1px solid var(--sheet-rule); }
+  .slot span { white-space: normal; }
+  .slot code { white-space: nowrap; font-size: .82em; }        /* a tag never breaks inside itself */
+  .slot:nth-child(5) { grid-column: 1 / -1; border-left: 0; }   /* the cluster closes the grid: no empty cell */
+  .slot.alert { grid-column: 1 / -1; order: -1; border-top: 0; border-bottom: 1px solid var(--sheet-rule); }
+  .scrhead .ns { display: none; }
+  .sheet { padding: 16px 14px 18px; }
+  .line { grid-template-columns: 26px minmax(0, 1fr); }
+  .status { grid-column: 2; text-align: left; }
+  .readouts { grid-template-columns: 1fr 1fr; }
+  .ro.alert { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="board">
+    <h1>Theatre 1 <span>· pipeline-lab</span></h1>
+    <div class="slots" id="chart" aria-live="polite"><div class="slot"><small>Theatre 1</small><span>Reading the board…</span></div></div>
+  </header>
+  <p class="lede">A deployment is an operation. The <b>sign-in</b> checks (scans) each say GO or NO-GO; a NO-GO stops everything after it. The <b>procedure</b> ships the image and rolls it out; <b>sign-out</b> attacks it and files the reports. On the right the app is the patient on a <b>bedside monitor</b>: its error rate, and the alert that fires when more than 5% of requests fail for a full minute.</p>
+  <div id="banner"></div>
+
+  <div class="theatre">
+    <section class="sheet" aria-labelledby="h-check">
+      <h2 id="h-check">Surgical checklist</h2>
+      <p class="note">Each line is one stage script, run in the same toolbox image the GitHub runner uses, in the workflow's order. The tick is the script's own exit code; the evidence is the report it wrote.</p>
+      <div class="controls">
+        <button class="btn primary" id="full" type="button">Start full procedure</button>
+        <button class="btn" id="planted" type="button">Sign-in only, vulnerability planted</button>
+        <span class="runstate" id="runstate"></span>
+      </div>
+      <div id="lines"></div>
+      <div id="verdict"></div>
+    </section>
+
+    <section class="monitor" aria-labelledby="h-mon">
+      <div class="screen">
+        <div class="scrhead"><span id="h-mon">Patient: <b>app</b><span class="ns"> · namespace app</span></span><span id="mon-tag"></span></div>
+        <svg class="trace" id="trace" viewBox="0 0 560 190" role="img" aria-label="Error rate over the last ten minutes"></svg>
+        <div class="readouts">
+          <div class="ro"><small>Errors, 1 m</small><div class="n" id="ro-err">—<span>%</span></div></div>
+          <div class="ro"><small>Requests</small><div class="n" id="ro-rate">—<span>/s</span></div></div>
+          <div class="ro alert" id="ro-alert"><small>AppHighErrorRate</small><div class="n" id="ro-state">—</div><div class="why" id="ro-why"></div></div>
+        </div>
+        <div class="alarmbar" id="alarmbar" role="status"></div>
+      </div>
+      <div class="treat">
+        <button class="btn harm" type="button" data-k="boom">Induce failure: 30 × /boom</button>
+        <button class="btn" type="button" data-k="ok">Normal traffic: 30 × /</button>
+      </div>
+      <p class="treatres" id="treatres" aria-live="polite"></p>
+      <p class="mnote">The trace is <code>5xx ÷ all requests</code> over a 1-minute window, the exact expression the alert evaluates, sampled every 10 s from Prometheus. Above the dashed <b>5%</b> line the alert goes <b>pending</b>; it must stay above for its <b>for: 1m</b> before it <b>fires</b>. Requests go straight to the app's Service through the Kubernetes API (no ingress), so they count in the same metric.</p>
+    </section>
+  </div>
+
+  <p class="colophon">Stage scripts run with <code>docker compose -f runner/docker-compose.yml run --rm toolbox</code>; the GitHub → runner hop itself has not run (no remote yet). The monitor reads the cluster through <code>kubectl proxy</code> on <code>.cluster/kubeconfig.yaml</code>. A full procedure pushes a new tag, upgrades the Helm release and writes reports to S3.</p>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const STAGE = {
+  "prepare": ["Prepare", "Pick the tag (the commit) and the image name every later stage uses."],
+  "sast": ["Static analysis", "Semgrep reads the source for bugs and hard-coded secrets."],
+  "iac-scan": ["Infrastructure scan", "Trivy reads Terraform, the Helm chart and the Dockerfile for risky settings."],
+  "build": ["Build", "Docker builds the image."],
+  "image-scan": ["Image scan", "Trivy lists every package in the image (the SBOM) and its known vulnerabilities."],
+  "push": ["Push", "Sends the image to ECR and writes pushed.txt, the only permission deploy accepts."],
+  "deploy": ["Deploy", "Helm rolls out the new tag and waits; a request through the ingress must answer with it."],
+  "dast": ["Attack test", "OWASP ZAP probes the running app from outside, like a visitor would."],
+  "publish-reports": ["File the notes", "Copies every report to S3 under the tag."],
+};
+const PHASES = [["sign-in", "Sign in", "before anything ships"], ["procedure", "Procedure", "ship and roll out"], ["sign-out", "Sign out", "after it is live"]];
+const TICK = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="var(--go)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CROSS = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4 L12 12 M12 4 L4 12" fill="none" stroke="var(--sheet)" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+const secs = ms => ms < 60000 ? `${Math.round(ms / 1000)} s` : `${Math.floor(ms / 60000)} m ${Math.round(ms % 60000 / 1000)} s`;
+
+let state = null, pat = null, lastRunJson = "";
+
+async function pollRun() {
+  try {
+    state = await (await fetch("/api/run")).json();
+    const j = JSON.stringify(state.run) + JSON.stringify(state.chart);
+    if (j !== lastRunJson) { lastRunJson = j; renderRun(); } else tickClock();
+  } catch (e) { $("#banner").innerHTML = `<div class="banner">The theatre server stopped answering (${esc(e.message)}). Restart it with <code>bash scripts/ops.sh</code>.</div>`; }
+  setTimeout(pollRun, state?.run?.state === "running" ? 1000 : 4000);
+}
+async function pollPatient() {
+  try {
+    pat = await (await fetch("/api/patient")).json();
+    if (pat.reading) $("#ro-why").textContent = "reading the patient…";
+    else renderPatient();
+  } catch (e) {
+    $("#ro-state").textContent = "NO SIGNAL";
+    $("#ro-alert").className = "ro alert nosignal";
+    $("#ro-why").textContent = `the theatre server did not answer: ${e.message}`;
+  }
+  setTimeout(pollPatient, pat?.reading ? 1000 : 4000);
+}
+
+function renderChart() {
+  const c = state.chart, d = pat?.deployment;
+  const a = pat?.errors?.length ? "nosignal" : (pat?.alert?.state || "unknown");
+  const word = { firing: "ALARM", pending: "WARNING", inactive: "NORMAL", nosignal: "NO SIGNAL" }[a] || "—";
+  const slot = (label, value, cls = "") => `<div class="slot ${cls}"><small>${label}</small><span>${value}</span></div>`;
+  $("#chart").innerHTML = [
+    slot("On the table", d ? `<code>${esc(d.tag)}</code> · rev ${esc(d.revision)} · ${d.ready}/${d.replicas} ready` : "—"),
+    slot("Last tag prepared", `<code>${esc(c.tag || "none")}</code>`),
+    slot("Pushed", c.pushed ? "yes" : "no"),
+    slot("ECR repository", `<code>${esc((c.repository || "—").replace(/^.*?\//, ""))}</code>`),
+    slot("Cluster", esc(c.cluster || "—")),
+    slot("AppHighErrorRate", word, `alert ${a}`),
+  ].join("");
+  $("#mon-tag").textContent = d ? d.tag : "";
+}
+
+function evidenceHTML(st) {
+  const e = st.evidence;
+  if (!e) return "";
+  if (e.tool) {
+    const order = ["CRITICAL", "ERROR", "HIGH", "WARNING", "MEDIUM", "LOW", "INFO", "High", "Medium", "Low", "Informational"];
+    const chips = Object.entries(e.counts).sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]))
+      .map(([k, v]) => `<span class="chip ${/CRITICAL|ERROR/.test(k) ? "crit" : /HIGH|High/.test(k) ? "hi" : ""}">${esc(k)} ${v}</span>`).join("") || `<span class="chip">no findings</span>`;
+    const extra = st.id === "image-scan" ? ` · <b>${e.critical_with_fix}</b> critical with a fix · SBOM: ${e.sbom_components} packages` : "";
+    const items = e.items.length ? `<ul>${e.items.map(i => `<li><span class="s">${esc(i.sev)}</span><span class="w">${esc(i.what)} <em>${esc(i.where)}</em></span></li>`).join("")}</ul>` : "";
+    return `<div class="ev"><div class="chips">${chips}<span class="rule">${esc(e.tool)}: ${esc(e.rule)}${extra}</span></div>${items}</div>`;
+  }
+  if (st.id === "push") return `<div class="ev"><span class="rule">${e.pushed ? `Pushed <code>${esc(e.image)}</code>` : "Nothing pushed."}</span></div>`;
+  if (e.tag) return `<div class="ev"><span class="rule">Tag <code>${esc(e.tag)}</code></span></div>`;
+  return "";
+}
+
+function lineHTML(st, now) {
+  const [name, what] = STAGE[st.id] || [st.id, ""];
+  let cls = "idle", status = `<span>waiting</span>`, box = "";
+  if (st.state === "go") { cls = "go"; box = TICK; status = `<span class="go">GO</span><small class="t">${secs(st.finished - st.started)}</small>`; }
+  else if (st.state === "no-go") { cls = "nogo"; box = CROSS; status = `<span class="nogo">NO-GO</span><small class="t">exit ${st.exit} · ${secs(st.finished - st.started)}</small>`; }
+  else if (st.state === "running") { cls = "running"; status = `<span class="run">in progress</span><small class="t" data-since="${st.started}">${secs(now - st.started)}</small>`; }
+  else if (st.state === "not started") status = `<span>not started</span><small>after a NO-GO</small>`;
+  else if (st.state === "not in this procedure") status = `<span>not in this run</span><small>sign-in only</small>`;
+  const tail = st.state === "running" || st.state === "no-go" ? `<div class="tail">${esc(st.lines.slice(-5).join("\n"))}</div>` : "";
+  return `<li class="line ${cls}"><span class="box">${box}</span><span class="what"><b>${esc(name)}</b> <span class="chip">${esc(st.id)}</span><p>${esc(what)}</p></span><span class="status">${status}</span>${evidenceHTML(st)}${tail}</li>`;
+}
+
+function renderRun() {
+  renderChart();
+  const r = state.run, now = state.now;
+  const busy = r?.state === "running";
+  $("#full").disabled = $("#planted").disabled = busy;
+  if (!r) {
+    $("#runstate").textContent = "No procedure run from this page yet.";
+    $("#lines").innerHTML = PHASES.map(([p, t, sub]) => `<div class="phase"><h3>${t}<span>${sub}</span></h3><ol class="lines">${Object.keys(STAGE).filter(id => phaseOf(id) === p).map(id => lineHTML({ id, state: "waiting", lines: [] }, now)).join("")}</ol></div>`).join("");
+    $("#verdict").innerHTML = "";
+    return;
+  }
+  $("#runstate").innerHTML = busy ? `<b>${r.plant ? "Sign-in with a planted vulnerability" : "Full procedure"}</b>, ${secs(now - r.started)} so far` : `<b>${r.plant ? "Planted run" : "Full run"}</b> ${r.state === "done" ? "completed" : "stopped"} in ${secs(r.finished - r.started)}`;
+  $("#lines").innerHTML = PHASES.map(([p, t, sub]) => `<div class="phase"><h3>${t}<span>${sub}</span></h3><ol class="lines">${r.stages.filter(s => s.phase === p).map(s => lineHTML(s, now)).join("")}</ol></div>`).join("");
+  let v = "";
+  if (r.state === "stopped") {
+    const at = STAGE[r.stopped_at]?.[0] || r.stopped_at;
+    v = `<div class="verdict"><b>Stopped at ${esc(at)}.</b> ${r.plant ? "The gate caught the planted vulnerability, as intended." : "A gate refused this build."} Nothing after it ran${r.pushed ? "" : ", and <b>nothing was pushed</b>: deploy only ever accepts a tag push.sh published"}.</div>`;
+  } else if (r.state === "done") {
+    v = r.plant ? `<div class="verdict done"><b>Sign-in passed</b> with the vulnerability planted, which means the gate did not catch it. Check the evidence above.</div>`
+      : `<div class="verdict done"><b>Procedure complete.</b> <code>${esc(state.chart.image || "")}</code> is live; the monitor shows it on the table.</div>`;
+  }
+  $("#verdict").innerHTML = v;
+}
+function phaseOf(id) { return ["push", "deploy"].includes(id) ? "procedure" : ["dast", "publish-reports"].includes(id) ? "sign-out" : "sign-in"; }
+function tickClock() { document.querySelectorAll("[data-since]").forEach(el => el.textContent = secs(Date.now() - +el.dataset.since)); }
+
+function renderPatient() {
+  const p = pat;
+  if (state) renderChart();
+  const errs = p.errors || [];
+  const series = p.error_ratio || [];
+  // the viewBox is the element's own pixel width, so 11px labels stay 11px on a phone
+  const svgEl = $("#trace"), W = Math.max(300, Math.round(svgEl.clientWidth || 560)), H = Math.round(W < 420 ? 170 : 190), pl = 30, pr = 10, pt = 10, pb = 22;
+  svgEl.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const now = Date.now() / 1000, t0 = now - 600;
+  const maxV = Math.min(1, Math.max(.12, ...series.map(s => s[1])) * 1.1);   // a ratio never passes 100%
+  const x = t => pl + (t - t0) / 600 * (W - pl - pr), y = v => pt + (H - pt - pb) * (1 - v / maxV);
+  const grid = [0, .25, .5, .75, 1].map(f => { const v = maxV * f; return `<line class="gridline" x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl - 4}" y="${y(v) + 4}" text-anchor="end">${Math.round(v * 100)}</text>`; }).join("")
+    + [0, 2, 4, 6, 8, 10].map(m => `<line class="gridline" x1="${x(t0 + m * 60)}" x2="${x(t0 + m * 60)}" y1="${pt}" y2="${H - pb}"/><text x="${x(t0 + m * 60)}" y="${H - 6}" text-anchor="middle">${m === 10 ? "now" : `-${10 - m}m`}</text>`).join("");
+  // one segment per run of samples: a gap of more than 15 s (windows with no requests) stays a gap
+  const runs = []; series.forEach((s, i) => { if (!i || s[0] - series[i - 1][0] > 15) runs.push([]); runs[runs.length - 1].push(s); });
+  const wave = series.length ? runs.map(run => run.length > 1
+      ? `<polyline class="wave" points="${run.map(s => `${x(s[0]).toFixed(1)},${y(s[1]).toFixed(1)}`).join(" ")}"/>`
+      : `<circle cx="${x(run[0][0]).toFixed(1)}" cy="${y(run[0][1]).toFixed(1)}" r="2" fill="var(--phosphor)"/>`).join("") : `<text x="${W / 2}" y="${H / 2}" text-anchor="middle">no samples: ${errs.length ? "Prometheus not reachable" : "no traffic in the last 10 minutes"}</text>`;
+  $("#trace").innerHTML = grid + `<line class="thr" x1="${pl}" x2="${W - pr}" y1="${y(.05)}" y2="${y(.05)}"/><text x="${W - pr}" y="${y(.05) - 5}" text-anchor="end" style="fill:var(--warn)">5% threshold</text>` + wave;
+  const last = series.length ? series[series.length - 1][1] : null;
+  $("#ro-err").innerHTML = `${last == null ? "—" : (last * 100).toFixed(1)}<span>%</span>`;
+  $("#ro-rate").innerHTML = `${(p.req_rate || 0).toFixed(2)}<span>/s</span>`;
+  const a = p.alert || { state: "unknown" }, ro = $("#ro-alert"), bar = $("#alarmbar");
+  ro.className = `ro alert ${errs.length ? "nosignal" : a.state}`;
+  $("#ro-state").textContent = a.state === "firing" ? "ALARM" : a.state === "pending" ? "WARNING" : errs.length ? "NO SIGNAL" : "NORMAL";
+  const since = a.active_at ? Math.round((Date.now() - Date.parse(a.active_at)) / 1000) : null;
+  $("#ro-why").textContent = a.state === "pending" ? `above 5% for ${since}s of the 60s it needs` : a.state === "firing" ? `firing; above 5% since ${since}s ago` : errs.length ? "" : "error rate under 5%, or no traffic";
+  bar.className = `alarmbar ${a.state}`;
+  bar.textContent = a.state === "firing" ? `ALARM · AppHighErrorRate firing: above 5% for more than a minute` : a.state === "pending" ? `WARNING · AppHighErrorRate pending: it fires if this holds for 1 minute` : "";
+  $("#banner").innerHTML = errs.length ? `<div class="banner">The monitor cannot read the cluster: ${errs.map(esc).join("; ")}. After a Docker restart: <code>terraform -chdir=terraform apply "-replace=aws_eks_cluster.this"</code>, refresh <code>.cluster/kubeconfig.yaml</code>, and delete the NotReady node.</div>` : "";
+}
+
+document.querySelector(".treat").addEventListener("click", async e => {
+  const b = e.target.closest("button"); if (!b) return;
+  b.disabled = true; $("#treatres").textContent = "sending…";
+  try {
+    const r = await fetch("/api/treat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: b.dataset.k, count: 30 }) });
+    const d = await r.json(); if (!r.ok) throw new Error(d.error);
+    $("#treatres").textContent = `${d.sent} × ${d.path} → ${Object.entries(d.codes).map(([c, n]) => `${n} × ${c === "0" ? "no answer" : c}`).join(", ")} · median ${d.ms} ms. The trace catches up within ~30 s (scrape + rate window).`;
+  } catch (err) { $("#treatres").textContent = `could not reach the app: ${err.message}`; }
+  finally { b.disabled = false; }
+});
+async function start(mode) {
+  const r = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode }) });
+  const d = await r.json(); if (!r.ok) { $("#banner").innerHTML = `<div class="banner">${esc(d.error)}</div>`; return; }
+  lastRunJson = ""; pollOnce();
+}
+async function pollOnce() { state = await (await fetch("/api/run")).json(); lastRunJson = ""; renderRun(); }
+$("#full").addEventListener("click", () => start("full"));
+$("#planted").addEventListener("click", () => start("planted"));
+setInterval(tickClock, 1000);
+pollRun(); pollPatient();
+</script>
+</body>
+</html>

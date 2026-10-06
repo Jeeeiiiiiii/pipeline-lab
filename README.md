@@ -62,6 +62,7 @@ platform/      Helm values: ingress-nginx, external-secrets, kube-prometheus-sta
 scripts/ci/    one script per pipeline stage, plus lib.sh (the only place addresses are decided)
 scripts/       platform-up.sh  pipeline.sh  forward.sh  demo.sh  down.sh
 runner/        the runner/toolbox image and its compose file
+ops/           the operating theatre: server.py (stdlib) + index.html, self-hosted fonts
 .github/       the workflow
 .trivyignore.yaml   accepted IaC findings, each with its reason
 ```
@@ -118,6 +119,25 @@ from Secrets Manager via ESO); Prometheus scraping the app; one request's
 trace id in the pod log, in Loki, and in Tempo; the error-rate alert going
 inactive → pending → firing after `/boom`; the image tags in ECR and the
 reports in S3.
+
+### The operating theatre
+
+```bash
+bash scripts/ops.sh          # after step 3 and the toolbox build; open http://localhost:8097
+```
+
+A live page with two halves. The checklist runs each stage script in the
+toolbox container, one `docker compose run` per stage in the workflow's
+order, and ticks it GO or NO-GO from the script's own exit code, with the
+evidence read from the report it wrote: Semgrep findings by severity, Trivy
+misconfigurations, image CVEs and how many CRITICALs have a fix, the SBOM
+size, ZAP warnings. "Sign-in only, vulnerability planted" runs
+`PLANT_VULN=1` through image-scan and shows the gate stopping it with nothing
+pushed. The bedside monitor reads the cluster through `kubectl proxy`: the
+`AppHighErrorRate` expression as a 10-minute trace with the 5% line, the
+request rate, and the alert's own state (normal, warning = pending, alarm =
+firing). "Induce failure" sends 30 requests to `/boom` straight to the app's
+Service; keep pressing for a minute and the alert fires.
 
 ### Watching the gates fail
 
